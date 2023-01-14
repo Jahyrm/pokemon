@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:pokemon/core/configs/themes.dart';
-import 'package:pokemon/core/widgets/theme_switcher.dart';
 
 enum ScreenBasePadding { none, horizontal, vertical, both }
 
@@ -28,6 +26,12 @@ class ScreenBase extends StatefulWidget {
   /// Determina si el widget hijo debe ocupar toda la pantalla.
   final bool expandBody;
 
+  /// Determina si encerramos el widget hijo en un scroll.
+  final bool wrapInScroll;
+
+  /// Determina la dirección del scroll
+  final Axis scrollDirection;
+
   final FloatingActionButton? floatingActionButton;
 
   const ScreenBase({
@@ -38,6 +42,8 @@ class ScreenBase extends StatefulWidget {
     this.paddingSize = 8.0,
     this.expandBody = false,
     this.floatingActionButton,
+    this.wrapInScroll = true,
+    this.scrollDirection = Axis.vertical,
   });
 
   @override
@@ -50,23 +56,31 @@ class _ScreenBaseState extends State<ScreenBase> {
 
   @override
   void initState() {
-    // Agregamos el margen en caso de ser necesario
-    if (widget.paddingMode == ScreenBasePadding.none) {
+    // Encerramos al widgt hijo dentro de un scroll en caso de ser necesario
+    if (widget.wrapInScroll) {
+      _child = SingleChildScrollView(
+        scrollDirection: widget.scrollDirection,
+        child: widget.child,
+      );
+    } else {
       _child = widget.child;
-    } else if (widget.paddingMode == ScreenBasePadding.horizontal) {
+    }
+
+    // Agregamos el margen en caso de ser necesario
+    if (widget.paddingMode == ScreenBasePadding.horizontal) {
       _child = Padding(
         padding: EdgeInsets.symmetric(horizontal: widget.paddingSize),
-        child: widget.child,
+        child: _child,
       );
     } else if (widget.paddingMode == ScreenBasePadding.vertical) {
       _child = Padding(
         padding: EdgeInsets.symmetric(vertical: widget.paddingSize),
-        child: widget.child,
+        child: _child,
       );
-    } else {
+    } else if (widget.paddingMode == ScreenBasePadding.both) {
       _child = Padding(
         padding: EdgeInsets.all(widget.paddingSize),
-        child: widget.child,
+        child: _child,
       );
     }
 
@@ -74,11 +88,9 @@ class _ScreenBaseState extends State<ScreenBase> {
     // necesario.
     if (widget.expandBody) {
       _child = Column(
-        mainAxisSize: MainAxisSize.max,
         children: [
           Expanded(
               child: Row(
-            mainAxisSize: MainAxisSize.max,
             children: [
               Expanded(child: _child),
             ],
