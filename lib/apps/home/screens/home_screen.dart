@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:pokemon/apps/home/controllers/home_controller.dart';
 import 'package:pokemon/apps/home/models/pokemon.dart';
 import 'package:pokemon/apps/home/widgets/new_pokemon_widget.dart';
+import 'package:pokemon/apps/home/widgets/pokemon_widget.dart';
 import 'package:pokemon/core/screens/connection_info_screen.dart';
 import 'package:pokemon/core/screens/screen_base.dart';
 import 'package:pokemon/core/utils/utils.dart';
@@ -68,22 +69,40 @@ class _HomeScreenState extends State<HomeScreen> {
       title: Utils.capitalize(lista[_con.selectedIndex].name ?? 'Desconocido'),
       paddingMode: ScreenBasePadding.both,
       floatingActionButton: _floatingActionButton(),
+      actionToDoIfReachEdge: () async {
+        if (_con.pokemonsUrlsResponse.next?.isNotEmpty ?? false) {
+          // await _con.getPokemons(url: _con.pokemonsUrlsResponse.next);
+          setState(() {
+            _future = _con.getPokemons(url: _con.pokemonsUrlsResponse.next);
+          });
+        }
+      },
       child: Column(
         children: [
           _tabs(lista),
           const SizedBox(height: 24.0),
           Visibility(
-              maintainState: true,
-              visible: _con.selectedIndex == 0,
-              child: NewPokemonWidget(pokemon: lista[0])),
+            maintainState: true,
+            visible: _con.selectedIndex == 0,
+            child: PokemonWidget(
+              pokemon: lista[0],
+            ),
+          ),
           Visibility(
-              maintainState: true,
-              visible: _con.selectedIndex == 1,
-              child: NewPokemonWidget(pokemon: lista[1])),
+            maintainState: true,
+            visible: _con.selectedIndex == 1,
+            child: PokemonWidget(
+              pokemon: lista[1],
+            ),
+          ),
           Visibility(
-              maintainState: true,
-              visible: _con.selectedIndex == 2,
-              child: NewPokemonWidget(pokemon: lista[2]))
+            maintainState: true,
+            visible: _con.selectedIndex == 2,
+            child: PokemonWidget(
+              pokemon: lista[2],
+            ),
+          ),
+          const SizedBox(height: 100),
         ],
       ),
     );
@@ -214,6 +233,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   FloatingActionButton _floatingActionButton() {
     return FloatingActionButton(
+      backgroundColor: Theme.of(context).primaryColor,
       onPressed: () {
         _con.toggleTheme(context, _isLightMode);
       },

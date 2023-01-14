@@ -9,7 +9,7 @@ class GlobalVars {
 
   static String appName = 'Bayteq Pokemón';
 
-  static String protocol = dev ? 'https://' : 'https://';
+  static String protocol = dev ? 'http://' : 'https://';
   static String hots = dev ? 'pokeapi.co' : 'pokeapi.co';
   static String port = dev ? '' : '';
   static String apiEndpoint = '/api/v2';

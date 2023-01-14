@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
 
 enum ScreenBasePadding { none, horizontal, vertical, both }
 
@@ -32,7 +33,12 @@ class ScreenBase extends StatefulWidget {
   /// Determina la dirección del scroll
   final Axis scrollDirection;
 
+  /// Si el usuario envía su propio floating Action Button se utiliza si no no.
   final FloatingActionButton? floatingActionButton;
+
+  /// Si el usuario envía una función aquí, se agregará la lógica de "scroll
+  /// Twitter"
+  final Future<void> Function()? actionToDoIfReachEdge;
 
   const ScreenBase({
     super.key,
@@ -44,6 +50,7 @@ class ScreenBase extends StatefulWidget {
     this.floatingActionButton,
     this.wrapInScroll = true,
     this.scrollDirection = Axis.vertical,
+    this.actionToDoIfReachEdge,
   });
 
   @override
@@ -58,10 +65,27 @@ class _ScreenBaseState extends State<ScreenBase> {
   Widget build(BuildContext context) {
     // Encerramos al widgt hijo dentro de un scroll en caso de ser necesario
     if (widget.wrapInScroll) {
-      _child = SingleChildScrollView(
-        scrollDirection: widget.scrollDirection,
-        child: widget.child,
-      );
+      // Envolvemos el scroll en un pull-to-refresh en caso de que se envíe
+      // una función
+      if (widget.actionToDoIfReachEdge != null) {
+        _child = LiquidPullToRefresh(
+          showChildOpacityTransition: true,
+          springAnimationDurationInMilliseconds: 1000,
+          color: Theme.of(context).primaryColor,
+          onRefresh: () async {
+            await widget.actionToDoIfReachEdge!();
+          },
+          child: SingleChildScrollView(
+            scrollDirection: widget.scrollDirection,
+            child: widget.child,
+          ),
+        );
+      } else {
+        _child = SingleChildScrollView(
+          scrollDirection: widget.scrollDirection,
+          child: widget.child,
+        );
+      }
     } else {
       _child = widget.child;
     }

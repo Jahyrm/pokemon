@@ -7,7 +7,9 @@ class PokemonWidgetController {
 
   List<HabilidadPokemon> habilidades = [];
 
-  void toggleHabilidad(HabilidadPokemon habilidadPokemon) {
+  /// Ingresamos o Eliminar una habilidad a la lista, recibe como parámetro la
+  /// habilidad. (Tipo [HabilidadPokemon])
+  bool toggleHabilidad(HabilidadPokemon habilidadPokemon) {
     if (habilidades.contains(habilidadPokemon)) {
       habilidades.remove(habilidadPokemon);
       _modifyValues(habilidadPokemon, false);
@@ -15,10 +17,16 @@ class PokemonWidgetController {
       if (habilidades.length < 2) {
         habilidades.add(habilidadPokemon);
         _modifyValues(habilidadPokemon, true);
+      } else {
+        return false;
       }
     }
+    return true;
   }
 
+  /// Modifica los valores correspondientes de acuerdo a cada habilidad escogida
+  /// Recibe como parámetro la habilidad y una bandera o boolean que indica
+  /// si la habilidad se ingresó o eliminó
   void _modifyValues(HabilidadPokemon habilidadPokemon, bool seAgrego) {
     if (habilidadPokemon == HabilidadPokemon.intimidacion) {
       if (seAgrego) {
@@ -111,7 +119,9 @@ class PokemonWidgetController {
     }
   }
 
-  void toggleHabilidadDos(HabilidadPokemon habilidadPokemon) {
+  /// Ingresamos o Eliminar una habilidad a la lista, recibe como parámetro la
+  /// habilidad. (Tipo [HabilidadPokemon])
+  bool toggleHabilidadDos(HabilidadPokemon habilidadPokemon) {
     if (habilidades.contains(habilidadPokemon)) {
       habilidades.remove(habilidadPokemon);
       _modifyValuesDos(habilidadPokemon, false);
@@ -119,10 +129,16 @@ class PokemonWidgetController {
       if (habilidades.length < 2) {
         habilidades.add(habilidadPokemon);
         _modifyValuesDos(habilidadPokemon, true);
+      } else {
+        return false;
       }
     }
+    return true;
   }
 
+  /// Modifica los valores correspondientes de acuerdo a cada habilidad escogida
+  /// Recibe como parámetro la habilidad y una bandera o boolean que indica
+  /// si la habilidad se ingresó o eliminó
   void _modifyValuesDos(HabilidadPokemon habilidadPokemon, bool seAgrego) {
     if (habilidadPokemon == HabilidadPokemon.intimidacion) {
       if (seAgrego) {

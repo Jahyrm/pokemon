@@ -4,6 +4,8 @@ import 'package:pokemon/core/utils/utils.dart';
 
 enum ConnectionInfo { loading, error, empty }
 
+/// Esta es una pantalla genérica, que muestra información correspondiente
+/// a los que sucede cuando se hace una llamada a internet.
 class ConnectionInfoScreen extends StatefulWidget {
   final ConnectionInfo type;
   final String? customMessage;

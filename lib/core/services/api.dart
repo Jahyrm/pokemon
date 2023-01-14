@@ -8,6 +8,7 @@ import 'package:pokemon/core/configs/global_vars.dart';
 enum ApiCallMethods { get, post, put, delete }
 
 class Api {
+  /// Se implementa un método genérico para hacer llamadas a la api.
   static Future<Map<String, dynamic>?> call(
     String url, {
     ApiCallMethods method = ApiCallMethods.get,

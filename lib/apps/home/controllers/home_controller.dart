@@ -10,15 +10,20 @@ import 'package:pokemon/core/widgets/theme_switcher.dart';
 
 /// Clase que contiene todas las acciones de la pantalla principal.
 class HomeController {
+  /// Lista que contendrá los pokemones actuales.
   List<Pokemon>? listaDePokemones;
+
+  /// Variable que contendrá la respuesta con las urls a llamar
   late PokemonsUrlListResponse pokemonsUrlsResponse;
 
-  int habilidadesSeleccionadas = 0, selectedIndex = 1;
+  /// Contadores e indices.
+  int habilidadesSeleccionadas = 0, selectedIndex = 0;
 
   /// Obtenemos una lista de pokemones o nulo, podemos determinar si queremos
   /// que sean pokemones aleatorios o no, estableciendo el parámetro
   /// [randomPokemons]
-  Future<List<Pokemon>?> getPokemons({bool randomPokemons = false}) async {
+  Future<List<Pokemon>?> getPokemons(
+      {String? url, bool randomPokemons = false}) async {
     // Agregamos datos que irán como parámetros en la URL
     Map<String, dynamic> urlParameters = {'limit': 3};
 
@@ -32,13 +37,17 @@ class HomeController {
     }
     // Hacemos la llamada a la api para cargar la lista de 3 pokemones
     Map<String, dynamic>? apiResponse = await Api.call(
-      '${GlobalVars.apiUrl}/pokemon/',
-      data: urlParameters,
+      url ?? '${GlobalVars.apiUrl}/pokemon/',
+      data: url == null ? urlParameters : null,
     );
 
     if (apiResponse != null) {
       pokemonsUrlsResponse = PokemonsUrlListResponse.fromJson(apiResponse);
       if (pokemonsUrlsResponse.pokemonUrls?.isNotEmpty ?? false) {
+        if (url != null) {
+          selectedIndex = 0;
+          listaDePokemones = null;
+        }
         for (PokemonUrl pokemonUrl in pokemonsUrlsResponse.pokemonUrls!) {
           if (pokemonUrl.url?.isNotEmpty ?? false) {
             await _addPokemonToList(pokemonUrl.url!);
@@ -49,6 +58,7 @@ class HomeController {
     return listaDePokemones;
   }
 
+  /// Función que camia de tema de claro a oscuro
   void toggleTheme(BuildContext context, bool isLightMode) {
     if (isLightMode) {
       MyInheritedTheme.of(context).changeThemeFunction(AppThemes.dark);
@@ -57,6 +67,7 @@ class HomeController {
     }
   }
 
+  /// Va a agregando cada pokemon consultado a una lista.
   Future<void> _addPokemonToList(String pokemonUrl) async {
     // Hacemos la llamada a la api para cargar la info de un pokemon
     Map<String, dynamic>? apiResponse = await Api.call(pokemonUrl);

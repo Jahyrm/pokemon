@@ -34,8 +34,11 @@ dependencies:
 
   # Estilos
   google_fonts: ^3.0.1
+
+  # Diseño
   transparent_image: ^2.0.0
   percent_indicator: ^4.0.1
+  liquid_pull_to_refresh: ^3.0.1
 
   # Comunicación HTTP
   http: ^0.13.5

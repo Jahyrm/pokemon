@@ -16,6 +16,29 @@ class NewPokemonWidget extends StatefulWidget {
 class _NewPokemonWidgetState extends State<NewPokemonWidget> {
   final PokemonWidgetController _con = PokemonWidgetController();
 
+  /// Establece los datos que se envían como parámetros desde el widget padre.
+  void _getDataOfPokemon() {
+    _con.baseHp = widget.pokemon.stats?[0].baseStat ?? 0;
+    _con.baseAttack = widget.pokemon.stats?[1].baseStat ?? 0;
+    _con.baseDefense = widget.pokemon.stats?[2].baseStat ?? 0;
+    _con.baseSpeed = widget.pokemon.stats?[5].baseStat ?? 0;
+
+    if (widget.pokemon.sprites?.other?.officialArtwork?.frontDefault != null) {
+      _con.photoUrl =
+          widget.pokemon.sprites!.other!.officialArtwork!.frontDefault;
+    }
+    if (_con.photoUrl == null) {
+      if (widget.pokemon.sprites?.other?.home?.frontDefault != null) {
+        _con.photoUrl = widget.pokemon.sprites!.other!.home!.frontDefault;
+      }
+    }
+    if (_con.photoUrl == null) {
+      if (widget.pokemon.sprites?.frontDefault != null) {
+        _con.photoUrl = widget.pokemon.sprites!.frontDefault;
+      }
+    }
+  }
+
   @override
   void didUpdateWidget(NewPokemonWidget oldWidget) {
     _getDataOfPokemon();
@@ -102,9 +125,12 @@ class _NewPokemonWidgetState extends State<NewPokemonWidget> {
               )
             : null,
         onPressed: () {
-          setState(() {
-            _con.toggleHabilidadDos(habilidadPokemon);
-          });
+          bool sePuedeAgregar = _con.toggleHabilidadDos(habilidadPokemon);
+          if (sePuedeAgregar) {
+            setState(() {});
+          } else {
+            _showDialog();
+          }
         },
         child: Text(
           texto,
@@ -276,25 +302,26 @@ class _NewPokemonWidgetState extends State<NewPokemonWidget> {
     );
   }
 
-  void _getDataOfPokemon() {
-    _con.baseHp = widget.pokemon.stats?[0].baseStat ?? 0;
-    _con.baseAttack = widget.pokemon.stats?[1].baseStat ?? 0;
-    _con.baseDefense = widget.pokemon.stats?[2].baseStat ?? 0;
-    _con.baseSpeed = widget.pokemon.stats?[5].baseStat ?? 0;
-
-    if (widget.pokemon.sprites?.other?.officialArtwork?.frontDefault != null) {
-      _con.photoUrl =
-          widget.pokemon.sprites!.other!.officialArtwork!.frontDefault;
-    }
-    if (_con.photoUrl == null) {
-      if (widget.pokemon.sprites?.other?.home?.frontDefault != null) {
-        _con.photoUrl = widget.pokemon.sprites!.other!.home!.frontDefault;
-      }
-    }
-    if (_con.photoUrl == null) {
-      if (widget.pokemon.sprites?.frontDefault != null) {
-        _con.photoUrl = widget.pokemon.sprites!.frontDefault;
-      }
-    }
+  /// Muestra el dialogo que die que no se permite más de 2 habilidades
+  void _showDialog() {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text('Información'),
+            titleTextStyle: const TextStyle(
+                fontWeight: FontWeight.bold, color: Colors.black, fontSize: 20),
+            actionsOverflowButtonSpacing: 20,
+            actions: [
+              ElevatedButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: const Text('Aceptar')),
+            ],
+            content: const Text(
+                'Solo puedes seleccionar un máximo de 2 habilidades.'),
+          );
+        });
   }
 }

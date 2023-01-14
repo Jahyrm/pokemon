@@ -26,11 +26,15 @@ class _PokemonWidgetState extends State<PokemonWidget> {
 
   @override
   void initState() {
+    /// Establecemos como parámetros los datos que llegan desde el widget padre
     _con.baseHp = widget.pokemon.stats?[0].baseStat ?? 0;
     _con.baseAttack = widget.pokemon.stats?[1].baseStat ?? 0;
     _con.baseDefense = widget.pokemon.stats?[2].baseStat ?? 0;
     _con.baseSpeed = widget.pokemon.stats?[5].baseStat ?? 0;
 
+    /// Se crean otras variables para guardar la suma de las habilidades
+    /// Luedo en la vista o en la pantalla (en parte más abajo de este código)
+    /// se suma la base más lo de la habilidades.
     _con.hp = 0;
     _con.attack = 0;
     _con.defense = 0;
@@ -131,9 +135,12 @@ class _PokemonWidgetState extends State<PokemonWidget> {
               )
             : null,
         onPressed: () {
-          setState(() {
-            _con.toggleHabilidad(habilidadPokemon);
-          });
+          bool sePuedeAgregar = _con.toggleHabilidad(habilidadPokemon);
+          if (sePuedeAgregar) {
+            setState(() {});
+          } else {
+            _showDialog();
+          }
         },
         child: Text(
           texto,
@@ -263,9 +270,9 @@ class _PokemonWidgetState extends State<PokemonWidget> {
                 width: MediaQuery.of(context).size.width * 0.65,
                 lineHeight: 20.0,
                 percent:
-                    (((_con.baseDefense + _con.baseDefense) * 100) / 250) / 100,
+                    (((_con.baseDefense + _con.defense) * 100) / 250) / 100,
                 center: Text(
-                  (_con.baseDefense + _con.baseDefense).toString(),
+                  (_con.baseDefense + _con.defense).toString(),
                   style: const TextStyle(color: Colors.white),
                 ),
                 barRadius: const Radius.circular(15.0),
@@ -303,5 +310,28 @@ class _PokemonWidgetState extends State<PokemonWidget> {
         const SizedBox(height: 8),
       ],
     );
+  }
+
+  /// Muestra el dialogo que die que no se permite más de 2 habilidades
+  void _showDialog() {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text('Información'),
+            titleTextStyle: const TextStyle(
+                fontWeight: FontWeight.bold, color: Colors.black, fontSize: 20),
+            actionsOverflowButtonSpacing: 20,
+            actions: [
+              ElevatedButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: const Text('Aceptar')),
+            ],
+            content: const Text(
+                'Solo puedes seleccionar un máximo de 2 habilidades.'),
+          );
+        });
   }
 }
