@@ -5,11 +5,11 @@
 /// se establecen aquí manualmente, y en caso de haber un ajuste solo se hace en
 /// este archivo en no en todo lado.
 class GlobalVars {
-  static bool dev = true;
+  static bool dev = false;
 
   static String appName = 'Bayteq Pokemón';
 
-  static String protocol = dev ? 'http://' : 'https://';
+  static String protocol = dev ? 'https://' : 'https://';
   static String hots = dev ? 'pokeapi.co' : 'pokeapi.co';
   static String port = dev ? '' : '';
   static String apiEndpoint = '/api/v2';

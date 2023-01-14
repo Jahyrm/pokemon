@@ -12,7 +12,7 @@ class AppThemes {
   );
 
   /// Tema oscuro por defecto de flutter
-  static final ThemeData defaultDarkTheme = ThemeData.light(useMaterial3: true);
+  static final ThemeData defaultDarkTheme = ThemeData.dark(useMaterial3: true);
 
   /// Mi tema claro
   static final light = ThemeData(
@@ -20,8 +20,7 @@ class AppThemes {
     useMaterial3: true,
     primarySwatch: Colors.red,
     colorScheme: defaultLightTheme.colorScheme.copyWith(
-      primary: Colors.yellow,
-      onPrimary: Colors.black,
+      primary: Colors.red,
     ),
     textTheme: GoogleFonts.montserratTextTheme(),
     appBarTheme: defaultLightTheme.appBarTheme.copyWith(
@@ -34,11 +33,17 @@ class AppThemes {
     brightness: Brightness.dark,
     useMaterial3: true,
     primarySwatch: Colors.red,
-    colorScheme: ColorScheme.fromSwatch(
-      brightness: Brightness.dark,
-      primarySwatch: Colors.yellow,
+    colorScheme: defaultDarkTheme.colorScheme.copyWith(
+      primary: Colors.red,
     ),
-    textTheme: GoogleFonts.montserratTextTheme(),
+    textTheme: GoogleFonts.montserratTextTheme(defaultDarkTheme.textTheme),
+    elevatedButtonTheme: ElevatedButtonThemeData(
+      style: ElevatedButton.styleFrom(
+        padding: const EdgeInsets.symmetric(horizontal: 2),
+        backgroundColor: Colors.grey[300],
+        foregroundColor: Colors.black,
+      ),
+    ),
     appBarTheme: defaultDarkTheme.appBarTheme.copyWith(
       centerTitle: true,
     ),

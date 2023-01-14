@@ -55,7 +55,7 @@ class _ScreenBaseState extends State<ScreenBase> {
   late Widget _child;
 
   @override
-  void initState() {
+  Widget build(BuildContext context) {
     // Encerramos al widgt hijo dentro de un scroll en caso de ser necesario
     if (widget.wrapInScroll) {
       _child = SingleChildScrollView(
@@ -98,12 +98,6 @@ class _ScreenBaseState extends State<ScreenBase> {
         ],
       );
     }
-
-    super.initState();
-  }
-
-  @override
-  Widget build(BuildContext context) {
     return Scaffold(
       appBar: _appBar(),
       body: _child,

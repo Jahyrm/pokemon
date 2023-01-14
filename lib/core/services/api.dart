@@ -18,9 +18,7 @@ class Api {
     try {
       if (GlobalVars.dev) {
         printDebugInfo = true;
-        log('0');
       }
-      log('1');
 
       String finalUrl;
 

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pokemon/apps/home/controllers/home_controller.dart';
 import 'package:pokemon/apps/home/models/pokemon.dart';
+import 'package:pokemon/apps/home/widgets/new_pokemon_widget.dart';
 import 'package:pokemon/core/screens/connection_info_screen.dart';
 import 'package:pokemon/core/screens/screen_base.dart';
 import 'package:pokemon/core/utils/utils.dart';
@@ -39,11 +40,10 @@ class _HomeScreenState extends State<HomeScreen> {
       future: _future,
       builder: (BuildContext context, AsyncSnapshot<List<Pokemon>?> sp) {
         // sp = const AsyncSnapshot<List<Pokemon>?>.withData(ConnectionState.done, null);
-        //sp = const AsyncSnapshot<List<Pokemon>?>.withData(ConnectionState.done, []);
+        // sp = const AsyncSnapshot<List<Pokemon>?>.withData(ConnectionState.done, []);
         // sp = const AsyncSnapshot<List<Pokemon>?>.withData(ConnectionState.waiting, null);
         // sp = AsyncSnapshot<List<Pokemon>?>.withError(ConnectionState.done, 'some error', StackTrace.current);
-
-        if (sp.connectionState == ConnectionState.done) {
+        if (sp.connectionState != ConnectionState.waiting) {
           if (sp.hasData) {
             if (sp.data!.isNotEmpty && sp.data!.length == 3) {
               return _body(sp.data!);
@@ -63,25 +63,150 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _body(List<Pokemon> lista) {
+  ScreenBase _body(List<Pokemon> lista) {
     return ScreenBase(
       title: Utils.capitalize(lista[_con.selectedIndex].name ?? 'Desconocido'),
       paddingMode: ScreenBasePadding.both,
-      expandBody: false,
       floatingActionButton: _floatingActionButton(),
-      child: SingleChildScrollView(
-        child: Column(
-          children: const [
-            Text('Prueba'),
-            Text('Prueba'),
-            Text('Prueba'),
-            Text('Prueba'),
-            Text('Prueba'),
-            Text('Prueba'),
-            Text('Prueba'),
-            Text('Prueba'),
-            Text('Prueba'),
-          ],
+      child: Column(
+        children: [
+          _tabs(lista),
+          const SizedBox(height: 24.0),
+          Visibility(
+              maintainState: true,
+              visible: _con.selectedIndex == 0,
+              child: NewPokemonWidget(pokemon: lista[0])),
+          Visibility(
+              maintainState: true,
+              visible: _con.selectedIndex == 1,
+              child: NewPokemonWidget(pokemon: lista[1])),
+          Visibility(
+              maintainState: true,
+              visible: _con.selectedIndex == 2,
+              child: NewPokemonWidget(pokemon: lista[2]))
+        ],
+      ),
+    );
+  }
+
+  Padding _tabs(List<Pokemon> lista) {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Row(
+        children: [
+          Expanded(
+            child: leftTab(lista[0].name),
+          ),
+          Expanded(
+            child: centerTab(lista[1].name),
+          ),
+          Expanded(
+            child: rightTab(lista[2].name),
+          )
+        ],
+      ),
+    );
+  }
+
+  InkWell leftTab(String? name) {
+    return InkWell(
+      onTap: () {
+        setState(() {
+          _con.selectedIndex = 0;
+        });
+      },
+      child: Container(
+        alignment: Alignment.center,
+        height: 45,
+        decoration: BoxDecoration(
+          color: _con.selectedIndex == 0
+              ? Theme.of(context).primaryColor
+              : Colors.grey[300],
+          borderRadius: const BorderRadius.only(
+            topLeft: Radius.circular(25.0),
+            bottomLeft: Radius.circular(25.0),
+          ),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 4.0),
+          child: Text(
+            Utils.capitalize(name ?? ''),
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: TextStyle(
+              color: _con.selectedIndex == 0
+                  ? Colors.white
+                  : Theme.of(context).primaryColorDark,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  InkWell centerTab(String? name) {
+    return InkWell(
+      onTap: () {
+        setState(() {
+          _con.selectedIndex = 1;
+        });
+      },
+      child: Container(
+        alignment: Alignment.center,
+        height: 45,
+        decoration: BoxDecoration(
+          color: _con.selectedIndex == 1
+              ? Theme.of(context).primaryColor
+              : Colors.grey[300],
+        ),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 4.0),
+          child: Text(
+            Utils.capitalize(name ?? ''),
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: TextStyle(
+              color: _con.selectedIndex == 1
+                  ? Colors.white
+                  : Theme.of(context).primaryColorDark,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  InkWell rightTab(String? name) {
+    return InkWell(
+      onTap: () {
+        setState(() {
+          _con.selectedIndex = 2;
+        });
+      },
+      child: Container(
+        alignment: Alignment.center,
+        height: 45,
+        decoration: BoxDecoration(
+          color: _con.selectedIndex == 2
+              ? Theme.of(context).primaryColor
+              : Colors.grey[300],
+          borderRadius: const BorderRadius.only(
+            topRight: Radius.circular(25.0),
+            bottomRight: Radius.circular(25.0),
+          ),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 4.0),
+          child: Text(
+            Utils.capitalize(name ?? ''),
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: TextStyle(
+              color: _con.selectedIndex == 2
+                  ? Colors.white
+                  : Theme.of(context).primaryColorDark,
+            ),
+          ),
         ),
       ),
     );
@@ -93,45 +218,6 @@ class _HomeScreenState extends State<HomeScreen> {
         _con.toggleTheme(context, _isLightMode);
       },
       child: Icon(_isLightMode ? Icons.dark_mode : Icons.light_mode),
-    );
-  }
-
-  ScreenBase _emptyWidget({String? customMessage}) {
-    return ScreenBase(
-      title: 'Información',
-      child: Center(
-        child: Column(
-          children: [
-            const Icon(Icons.info),
-            const SizedBox(height: 8.0),
-            Text(customMessage ?? 'No se obtuvieron datos.')
-          ],
-        ),
-      ),
-    );
-  }
-
-  ScreenBase _errorWidget(String errorMessage) {
-    return ScreenBase(
-      title: 'Error',
-      child: Center(
-        child: Column(
-          children: [
-            Icon(Icons.error, color: Colors.red.shade900),
-            const SizedBox(height: 8.0),
-            Text(errorMessage)
-          ],
-        ),
-      ),
-    );
-  }
-
-  ScreenBase _loadingWidget() {
-    return const ScreenBase(
-      title: 'Cargando...',
-      child: Center(
-        child: CircularProgressIndicator(),
-      ),
     );
   }
 }
