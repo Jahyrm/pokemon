@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pokemon/apps/home/controllers/home_controller.dart';
 import 'package:pokemon/apps/home/models/pokemon.dart';
-import 'package:pokemon/apps/home/widgets/new_pokemon_widget.dart';
 import 'package:pokemon/apps/home/widgets/pokemon_widget.dart';
 import 'package:pokemon/core/screens/connection_info_screen.dart';
 import 'package:pokemon/core/screens/screen_base.dart';

@@ -1,5 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.bayteq.pokemon">
+   <uses-permission android:name="android.permission.INTERNET"/>
    <application
         android:label="Bayteq Pokemón"
         android:name="${applicationName}"
