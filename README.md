@@ -9,10 +9,6 @@ Este proyecto, es una aplicación móvil híbrida, se utilizó flutter para crea
 - Flutter versión 3.7.7
 - Null Safety Activado
 
-## Ejecución
-
-Se utilizó una librería, que aún no está migrada a null-safety, por lo tanto se recomienda ejecutar la aplicación con el comando.
-  
 ## Características
 
 - Cambio de tema claro a oscuro
